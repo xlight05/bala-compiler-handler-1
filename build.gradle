@@ -1,0 +1,53 @@
+plugins {
+    id 'java-library'
+}
+
+group 'io.ballerina.central.handlers'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'maven-publish'
+
+ext.ballerinaLangVersion = "2201.4.1"
+
+dependencies {
+    implementation "org.ballerinalang:ballerina-lang:${ballerinaLangVersion}"
+    implementation "org.ballerinalang:docerina:${ballerinaLangVersion}"
+    implementation 'com.google.code.gson:gson:2.10'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+
+repositories {
+
+    mavenLocal()
+    mavenCentral()
+    maven {
+        url = 'https://repo.maven.apache.org/maven2'
+    }
+    maven {
+        url = 'https://maven.pkg.github.com/xlight05/bala-compiler-handler-1'
+        credentials {
+            username System.getenv("packageUser")
+            password System.getenv("packagePAT")
+        }
+    }
+}
+
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        mavenLocal()
+    }
+}
+
+test {
+    useJUnitPlatform()
+}
+
+publishToMavenLocal.dependsOn build
